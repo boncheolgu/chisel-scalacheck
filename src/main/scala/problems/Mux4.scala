@@ -39,7 +39,5 @@ class Mux4 extends Module {
   m0.io.in1 := io.in1
 
   //Implement below ----------
-
-
   //Implement above ----------
 }

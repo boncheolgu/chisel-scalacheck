@@ -12,12 +12,12 @@ import chisel3._
 //
 class Memo extends Module {
   val io = IO(new Bundle {
-    val wen     = Input(Bool())
-    val wrAddr  = Input(UInt(8.W))
-    val wrData  = Input(UInt(8.W))
-    val ren     = Input(Bool())
-    val rdAddr  = Input(UInt(8.W))
-    val rdData  = Output(UInt(8.W))
+    val wen = Input(Bool())
+    val wrAddr = Input(UInt(8.W))
+    val wrData = Input(UInt(8.W))
+    val ren = Input(Bool())
+    val rdAddr = Input(UInt(8.W))
+    val rdData = Output(UInt(8.W))
   })
 
   val mem = Mem(256, UInt(8.W))

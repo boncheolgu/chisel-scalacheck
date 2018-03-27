@@ -14,7 +14,7 @@ import org.scalacheck.Test
 object Mux2Specification extends Properties("Mux2") {
   val manager = new TesterOptionsManager {
     // https://github.com/freechipsproject/chisel-testers/blob/master/src/main/scala/chisel3/iotesters/TesterOptions.scala#L13
-    testerOptions = testerOptions.copy(isVerbose=false)
+    testerOptions = testerOptions.copy(isVerbose = false)
 
     interpreterOptions = interpreterOptions.copy(setVerbose = false)
 
@@ -25,18 +25,19 @@ object Mux2Specification extends Properties("Mux2") {
     chiselOptions = chiselOptions.copy()
   }
 
-  val sel_gen : Gen[Int] = Gen.choose(0, 1)
-  val in_gen : Gen[Int] = Gen.choose(0, 1)
+  val sel_gen: Gen[Int] = Gen.choose(0, 1)
+  val in_gen: Gen[Int] = Gen.choose(0, 1)
 
-  property("mux2") = forAll(sel_gen, in_gen, in_gen) { (s: Int , i0: Int, i1: Int) =>
-    Driver.execute(() => new Mux2, manager) {
-      (c) => new PeekPokeTester(c) {
-        poke(c.io.sel, s)
-        poke(c.io.in1, i1)
-        poke(c.io.in0, i0)
-        step(1)
-        expect(c.io.out, if (s == 1) i1 else i0)
+  property("mux2") = forAll(sel_gen, in_gen, in_gen) {
+    (s: Int, i0: Int, i1: Int) =>
+      Driver.execute(() => new Mux2, manager) { (c) =>
+        new PeekPokeTester(c) {
+          poke(c.io.sel, s)
+          poke(c.io.in1, i1)
+          poke(c.io.in0, i0)
+          step(1)
+          expect(c.io.out, if (s == 1) i1 else i0)
+        }
       }
-    }
   }
 }

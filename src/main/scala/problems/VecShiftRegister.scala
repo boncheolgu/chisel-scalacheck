@@ -12,10 +12,10 @@ import chisel3._
 //
 class VecShiftRegister extends Module {
   val io = IO(new Bundle {
-    val ins   = Input(Vec(4, UInt(4.W)))
-    val load  = Input(Bool())
+    val ins = Input(Vec(4, UInt(4.W)))
+    val load = Input(Bool())
     val shift = Input(Bool())
-    val out   = Output(UInt(4.W))
+    val out = Output(UInt(4.W))
   })
   // Implement below ----------
 

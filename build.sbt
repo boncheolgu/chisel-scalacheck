@@ -10,8 +10,10 @@ val defaultVersions = Map(
   "chisel-iotesters" -> "1.1.+"
 )
 
-libraryDependencies ++= (Seq("chisel3","chisel-iotesters").map {
-  dep: String => "edu.berkeley.cs" %% dep % sys.props.getOrElse(dep + "Version", defaultVersions(dep)) })
+libraryDependencies ++= (Seq("chisel3", "chisel-iotesters").map { dep: String =>
+  "edu.berkeley.cs" %% dep % sys.props.getOrElse(dep + "Version",
+                                                 defaultVersions(dep))
+})
 
 libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
 
@@ -66,4 +68,3 @@ libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
 
 // To learn more about multi-project builds, head over to the official sbt
 // documentation at http://www.scala-sbt.org/documentation.html
-

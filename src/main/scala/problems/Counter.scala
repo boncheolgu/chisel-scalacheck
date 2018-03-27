@@ -11,7 +11,7 @@ import chisel3._
 //
 object Counter {
 
-  def wrapAround(n: UInt, max: UInt) = 
+  def wrapAround(n: UInt, max: UInt) =
     Mux(n > max, 0.U, n)
 
   // Modify below ----------

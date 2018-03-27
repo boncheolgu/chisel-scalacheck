@@ -14,8 +14,8 @@ class RealGCDInput extends Bundle {
 }
 
 class RealGCD extends Module {
-  val io  = IO(new Bundle {
-    val in  = DeqIO(new RealGCDInput())
+  val io = IO(new Bundle {
+    val in = DeqIO(new RealGCDInput())
     val out = Output(Valid(UInt(16.W)))
   })
 

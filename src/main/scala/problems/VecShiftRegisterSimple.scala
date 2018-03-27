@@ -10,7 +10,7 @@ import chisel3._
 //
 class VecShiftRegisterSimple extends Module {
   val io = IO(new Bundle {
-    val in  = Input(UInt(8.W))
+    val in = Input(UInt(8.W))
     val out = Output(UInt(8.W))
   })
 
