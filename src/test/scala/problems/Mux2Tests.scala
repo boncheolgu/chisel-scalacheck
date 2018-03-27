@@ -9,36 +9,29 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalacheck.Properties
 import org.scalacheck.Prop.forAll
+import org.scalacheck.Test
 
-class Mux2Tests(c: Mux2, s: Int, i0: Int, i1: Int) extends PeekPokeTester(c) {
-  poke(c.io.sel, s)
-  poke(c.io.in1, i1)
-  poke(c.io.in0, i0)
-  step(1)
-  expect(c.io.out, if (s == 1) i1 else i0)
-}
+object Mux2Tests {
+  def main(args: Array[String]): Unit = {
+    val optionsManager = new TesterOptionsManager()
+    optionsManager.doNotExitOnHelp()
+    optionsManager.parse(args)
 
+    val sel_gen : Gen[Int] = Gen.choose(0, 1)
+    val in_gen : Gen[Int] = Gen.choose(0, 1)
 
-object Mux2Specification extends Properties("Mux2") {
-  val manager = new TesterOptionsManager {
-    // https://github.com/freechipsproject/chisel-testers/blob/master/src/main/scala/chisel3/iotesters/TesterOptions.scala#L13
-    testerOptions = testerOptions.copy(isVerbose=false)
+    Driver.execute(() => new Mux2, optionsManager) {
+      (c) => new PeekPokeTester(c) {
+        val prop = forAll(sel_gen, in_gen, in_gen) ( (s: Int , i0: Int, i1: Int) => {
+          poke(c.io.sel, s)
+          poke(c.io.in1, i1)
+          poke(c.io.in0, i0)
+          step(1)
+          expect(c.io.out, if (s == 1) i1 else i0)
+        })
 
-    interpreterOptions = interpreterOptions.copy(setVerbose = false)
-
-    // https://github.com/freechipsproject/firrtl/blob/master/src/main/scala/firrtl/ExecutionOptionsManager.scala#L173
-    firrtlOptions = firrtlOptions.copy()
-
-    // https://github.com/freechipsproject/chisel3/blob/master/src/main/scala/chisel3/ChiselExecutionOptions.scala#L15
-    chiselOptions = chiselOptions.copy()
-  }
-
-  val sel_gen : Gen[Int] = Gen.choose(0, 1)
-  val in_gen : Gen[Int] = Gen.choose(0, 1)
-
-  property("mux2") = forAll(sel_gen, in_gen, in_gen) { (s: Int , i0: Int, i1: Int) =>
-    Driver.execute(() => new Mux2, manager) {
-      (c) => new Mux2Tests(c, s, i0, i1)
+        prop.check
+      }
     }
   }
 }
