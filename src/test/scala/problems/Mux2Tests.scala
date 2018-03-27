@@ -1,7 +1,7 @@
 // See LICENSE.txt for license details.
 package problems
 
-import chisel3.iotesters.{Driver, TesterOptionsManager, PeekPokeTester}
+import chisel3.iotesters.{Driver, PeekPokeTester}
 
 import org.scalacheck.Gen
 import org.scalacheck.Prop.forAll
@@ -23,11 +23,8 @@ class Mux2Tester(c: Mux2) extends PeekPokeTester(c) {
 }
 
 class Mux2Tests extends FreeSpec {
-  val optionsManager = new TesterOptionsManager()
-  // optionsManager.doNotExitOnHelp()
-  // optionsManager.parse(args)
-
   "Mux2Spec" in {
-    Driver.execute(() => new Mux2, optionsManager)((c) => new Mux2Tester(c))
+    Driver.execute(Array(), () => new Mux2)((c) => new Mux2Tester(c))
+    // Driver.execute(Array("--backend-name", "verilator"), () => new Mux2)((c) => new Mux2Tester(c))
   }
 }

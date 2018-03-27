@@ -15,6 +15,8 @@ libraryDependencies ++= (Seq("chisel3", "chisel-iotesters").map { dep: String =>
                                                  defaultVersions(dep))
 })
 
+libraryDependencies += "edu.berkeley.cs" %% "firrtl" % "1.0.+" % Test
+
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % Test
 
 libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
