@@ -24,7 +24,7 @@ class Mux2Tester(c: Mux2) extends PeekPokeTester(c) {
 
 class Mux2Tests extends FreeSpec {
   "Mux2Spec" in {
-    Driver.execute(Array(), () => new Mux2)((c) => new Mux2Tester(c))
-    // Driver.execute(Array("--backend-name", "verilator"), () => new Mux2)((c) => new Mux2Tester(c))
+    Driver.execute(Array(), () => new Mux2) (new Mux2Tester(_))
+    // Driver.execute(Array("--backend-name", "verilator"), () => new Mux2)(new Mux2Tester(_))
   }
 }
