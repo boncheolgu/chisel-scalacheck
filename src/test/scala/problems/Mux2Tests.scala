@@ -5,9 +5,10 @@ import chisel3._
 import chisel3.util._
 import chisel3.iotesters.{Driver, TesterOptionsManager, PeekPokeTester}
 
+import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen
 import org.scalacheck.Properties
 import org.scalacheck.Prop.forAll
-import org.scalacheck.Gen
 
 class Mux2Tests(c: Mux2, s: Int, i0: Int, i1: Int) extends PeekPokeTester(c) {
   poke(c.io.sel, s)
@@ -17,12 +18,25 @@ class Mux2Tests(c: Mux2, s: Int, i0: Int, i1: Int) extends PeekPokeTester(c) {
   expect(c.io.out, if (s == 1) i1 else i0)
 }
 
+
 object Mux2Specification extends Properties("Mux2") {
-  val uints : Gen[Int] = Gen.oneOf(0, 1)
+  val manager = new TesterOptionsManager {
+    // https://github.com/freechipsproject/chisel-testers/blob/master/src/main/scala/chisel3/iotesters/TesterOptions.scala#L13
+    testerOptions = testerOptions.copy(isVerbose=false)
 
-  val manager = new TesterOptionsManager()
+    interpreterOptions = interpreterOptions.copy(setVerbose = false)
 
-  property("mux2") = forAll(uints, uints, uints) { (s: Int , i0: Int, i1: Int) =>
+    // https://github.com/freechipsproject/firrtl/blob/master/src/main/scala/firrtl/ExecutionOptionsManager.scala#L173
+    firrtlOptions = firrtlOptions.copy()
+
+    // https://github.com/freechipsproject/chisel3/blob/master/src/main/scala/chisel3/ChiselExecutionOptions.scala#L15
+    chiselOptions = chiselOptions.copy()
+  }
+
+  val sel_gen : Gen[Int] = Gen.choose(0, 1)
+  val in_gen : Gen[Int] = Gen.choose(0, 1)
+
+  property("mux2") = forAll(sel_gen, in_gen, in_gen) { (s: Int , i0: Int, i1: Int) =>
     Driver.execute(() => new Mux2, manager) {
       (c) => new Mux2Tests(c, s, i0, i1)
     }

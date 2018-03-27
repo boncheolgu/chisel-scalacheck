@@ -15,7 +15,6 @@ libraryDependencies ++= (Seq("chisel3","chisel-iotesters").map {
 
 libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
 
-
 // Want to use a published library in your project?
 // You can define other libraries as dependencies in your build like this:
 // libraryDependencies += "org.typelevel" %% "cats-core" % "1.0.1"
