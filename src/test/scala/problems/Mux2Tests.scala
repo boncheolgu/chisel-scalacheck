@@ -21,7 +21,7 @@ class Mux2Tests extends FreeSpec with Matchers {
         poke(c.io.in1, i1)
         poke(c.io.in0, i0)
         step(1)
-        expect(c.io.out, if (s == 1) i1 else i1) :| "labeling option #1"
+        expect(c.io.out, if (s == 1) i1 else i0) :| "labeling option #1"
       }.check
 
       forAll(sel_gen, in_gen, in_gen) {
@@ -30,7 +30,7 @@ class Mux2Tests extends FreeSpec with Matchers {
         poke(c.io.in1, i1)
         poke(c.io.in0, i0)
         step(1)
-        expect(c.io.out, if (s == 1) i1 else i1, "labeling option #2")
+        expect(c.io.out, if (s == 1) i1 else i0, "labeling option #2")
       }.check
     })
   }
