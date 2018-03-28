@@ -24,9 +24,8 @@ class Mux2Spec extends ChiselPropSpec {
   val in_gen: Gen[Int] = Gen.choose(0, 1)
 
   property("Mux2 should work correctly") {
-    forAll(sel_gen, in_gen, in_gen) {
-      (s: Int, i0: Int, i1: Int) =>
-      assertTesterPasses{ new Mux2Tester(s, i0, i1) }
+    forAll(sel_gen, in_gen, in_gen) { (s: Int, i0: Int, i1: Int) =>
+      assertTesterPasses { new Mux2Tester(s, i0, i1) }
     }
   }
 }

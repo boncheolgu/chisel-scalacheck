@@ -18,13 +18,16 @@ import firrtl.{
 
 /** Common utility functions for Chisel unit tests. */
 trait ChiselRunners extends Assertions {
-  def runTester(t: => BasicTester, additionalVResources: Seq[String] = Seq()): Boolean = {
+  def runTester(t: => BasicTester,
+                additionalVResources: Seq[String] = Seq()): Boolean = {
     TesterDriver.execute(() => t, additionalVResources)
   }
-  def assertTesterPasses(t: => BasicTester, additionalVResources: Seq[String] = Seq()): Unit = {
+  def assertTesterPasses(t: => BasicTester,
+                         additionalVResources: Seq[String] = Seq()): Unit = {
     assert(runTester(t, additionalVResources))
   }
-  def assertTesterFails(t: => BasicTester, additionalVResources: Seq[String] = Seq()): Unit = {
+  def assertTesterFails(t: => BasicTester,
+                        additionalVResources: Seq[String] = Seq()): Unit = {
     assert(!runTester(t, additionalVResources))
   }
   def elaborate(t: => RawModule): Unit = Driver.elaborate(() => t)
@@ -43,7 +46,7 @@ trait ChiselRunners extends Assertions {
     */
   def compile(t: => RawModule): String = {
     val manager = new ExecutionOptionsManager("compile") with HasFirrtlOptions
-                                                         with HasChiselExecutionOptions {
+    with HasChiselExecutionOptions {
       commonOptions = CommonOptions(targetDirName = "test_run_dir")
     }
 
@@ -51,10 +54,10 @@ trait ChiselRunners extends Assertions {
       case ChiselExecutionSuccess(_, _, Some(firrtlExecRes)) =>
         firrtlExecRes match {
           case FirrtlExecutionSuccess(_, verilog) => verilog
-          case FirrtlExecutionFailure(msg) => fail(msg)
+          case FirrtlExecutionFailure(msg)        => fail(msg)
         }
       case ChiselExecutionSuccess(_, _, None) => fail() // This shouldn't happen
-      case ChiselExecutionFailure(msg) => fail(msg)
+      case ChiselExecutionFailure(msg)        => fail(msg)
     }
   }
 }
@@ -63,7 +66,11 @@ trait ChiselRunners extends Assertions {
 class ChiselFlatSpec extends FlatSpec with ChiselRunners with Matchers
 
 /** Spec base class for property-based testers. */
-class ChiselPropSpec extends PropSpec with ChiselRunners with PropertyChecks with Matchers {
+class ChiselPropSpec
+    extends PropSpec
+    with ChiselRunners
+    with PropertyChecks
+    with Matchers {
 
   // Constrain the default number of instances generated for every use of forAll.
   implicit override val generatorDrivenConfig =
@@ -82,16 +89,19 @@ class ChiselPropSpec extends PropSpec with ChiselRunners with PropertyChecks wit
   val vecSizes = Gen.choose(0, 4)
 
   // Generator for string representing an arbitrary integer.
-  val binaryString = for (i <- Arbitrary.arbitrary[Int]) yield "b" + i.toBinaryString
+  val binaryString = for (i <- Arbitrary.arbitrary[Int])
+    yield "b" + i.toBinaryString
 
   // Generator for a sequence of Booleans of size n.
-  def enSequence(n: Int): Gen[List[Boolean]] = Gen.containerOfN[List, Boolean](n, Gen.oneOf(true, false))
+  def enSequence(n: Int): Gen[List[Boolean]] =
+    Gen.containerOfN[List, Boolean](n, Gen.oneOf(true, false))
 
   // Generator which gives a width w and a list (of size n) of numbers up to w bits.
-  def safeUIntN(n: Int): Gen[(Int, List[Int])] = for {
-    w <- smallPosInts
-    i <- Gen.containerOfN[List, Int](n, Gen.choose(0, (1 << w) - 1))
-  } yield (w, i)
+  def safeUIntN(n: Int): Gen[(Int, List[Int])] =
+    for {
+      w <- smallPosInts
+      i <- Gen.containerOfN[List, Int](n, Gen.choose(0, (1 << w) - 1))
+    } yield (w, i)
 
   // Generator which gives a width w and a numbers up to w bits.
   val safeUInt = for {
@@ -100,11 +110,12 @@ class ChiselPropSpec extends PropSpec with ChiselRunners with PropertyChecks wit
   } yield (w, i)
 
   // Generator which gives a width w and a list (of size n) of a pair of numbers up to w bits.
-  def safeUIntPairN(n: Int): Gen[(Int, List[(Int, Int)])] = for {
-    w <- smallPosInts
-    i <- Gen.containerOfN[List, Int](n, Gen.choose(0, (1 << w) - 1))
-    j <- Gen.containerOfN[List, Int](n, Gen.choose(0, (1 << w) - 1))
-  } yield (w, i zip j)
+  def safeUIntPairN(n: Int): Gen[(Int, List[(Int, Int)])] =
+    for {
+      w <- smallPosInts
+      i <- Gen.containerOfN[List, Int](n, Gen.choose(0, (1 << w) - 1))
+      j <- Gen.containerOfN[List, Int](n, Gen.choose(0, (1 << w) - 1))
+    } yield (w, i zip j)
 
   // Generator which gives a width w and a pair of numbers up to w bits.
   val safeUIntPair = for {
